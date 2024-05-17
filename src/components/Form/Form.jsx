@@ -1,8 +1,9 @@
 import React, { useCallback, useEffect } from "react";
+
 import { useDispatch, useSelector } from 'react-redux';
+import { getField } from "../../getFields";
 
 import './styles.css';
-import { getField } from "../../getFields";
 
 export const Form = () => {
     const disp = useDispatch();

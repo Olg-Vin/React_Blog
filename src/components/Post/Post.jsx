@@ -1,12 +1,14 @@
 import React, { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 
-import './styles.css';
 import { getField } from '../../getFields';
 
-export const Post = ({name, theme, text}) => {
+import './styles.css';
+
+export const Post = ({name, theme, text, author}) => {
     const disp = useDispatch();
-    const isLongText = text.length > 20;
+
+    const isLongText = text.length > 150;
     const handleDelete = useCallback(() => {    
         disp({
             type: "ACTION_DELETE",
@@ -17,11 +19,12 @@ export const Post = ({name, theme, text}) => {
     }, [disp])
 
     const handleEdit = useCallback(() => {    
-        const { _name, _theme, _text } = getField()
+        const { _name, _theme, _text, _author } = getField()
 
         _name.value = name;
         _theme.value = theme;
         _text.value = text;
+        _author.value = author;
 
         disp({
             type: "ACTION_ENTER_EDIT_MODE",
@@ -32,18 +35,23 @@ export const Post = ({name, theme, text}) => {
         <div className="wrapper">
             <div className="post">
                 <div className="name">
-                    <span>Название:</span>
+                    {/* <span>Название:</span> */}
                     <span >{name}</span>
                 </div>
                 <div className="theme">
                     <span>Тема:</span>
                     <span >{theme}</span>
                 </div>
+                <div className="author">
+                    <span>Автор:</span>
+                    <span >{author}</span>
+                </div>
                 <div className="text">
-                    <span>Текст:</span>
+                    {/* <span>Текст:</span> */}
                     <span>
-                        { isLongText ? 
-                            text.slice(0, 50) + " ... " : 
+                        { 
+                        isLongText ? 
+                            text.slice(0, 150) + " ... " : 
                             text
                         }
                     </span>
@@ -51,7 +59,7 @@ export const Post = ({name, theme, text}) => {
             </div>
             <div className="buttons">
                 <div onClick={handleEdit} className="edit">
-                    Редактировать
+                    Просмотреть
                 </div>
                 <div onClick={handleDelete} className="delete">
                     Удалить
