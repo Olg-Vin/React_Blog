@@ -8,10 +8,10 @@ import './styles.css';
 
 export const PostList = () => {
     const posts = useSelector(state => state.posts);
-
+    
     return (
         <div className="list">
-            <span id='textSpan'>
+            <span className='textSpan'>
                 Записи
             </span>
             <div>

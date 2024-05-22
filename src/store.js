@@ -1,70 +1,55 @@
-import { createStore } from 'redux';
-import { posts } from './samples/posts';
+import { createStore } from 'redux'
+import { posts } from './samples/posts'
+import { useEffect } from 'react'
 
+// объект состояний
 const initialValue = {
-    isEditMode: false,
-    posts: [
-        ...posts
-    ]
+    posts: [...posts],
+    archivePosts: []
 }
 
 /**
- * payload = некоторая информация - к примеру. объект поста.
- * 
  * @param {*} state - текущие состояния
- * @param {*} action - действие (type + payload)
+ * @param {*} action - действие (type + payload) - объект
+ * payload = некоторая информация - к примеру. объект поста.
  */
-function dispatcher(state = initialValue, action) {
-    switch (action.type) {
-        case "ACTION_ENTER_EDIT_MODE": {
+function dispatcher(state = initialValue, action){
+    switch(action.type){
+        case 'ACTION_DELETE': {
             return {
-                isEditMode: true,
-                posts: state.posts
-            };
-        };
-        case "ACTION_LEAVE_EDIT_MODE": {
-            return {
-                isEditMode: false,
-                posts: state.posts
-            };
-        };
-        case "ACTION_ADD": {
-            return {
-                isEditMode: state.isEditMode,
                 posts: [
-                    ...state.posts, 
-                    action.payload,
+                    ...state.posts.filter(post => post.postHead !== action.payload.postHead)
                 ],
-            };
-        };
-
-        case "ACTION_DELETE": {
+                archivePosts: [
+                    ...state.archivePosts
+                ]
+            }
+        }
+        case 'ACTION_ARCHIVE': {
             return {
-                isEditMode: state.isEditMode,
                 posts: [
-                    ...state.posts.filter(post => post.name !== action.payload.name),
+                    ...state.posts.filter(post => post.postHead !== action.payload.postHead)
                 ],
-            };
-        };
-
-        case "ACTION_EDIT": {
+                archivePosts: [
+                    ...state.archivePosts,
+                    action.payload
+                ]
+            }
+        }
+        case 'ACTION_ADD': {
             return {
-                isEditMode: state.isEditMode,
                 posts: [
-                    ...state.posts.map(post => {
-                        if (post.name === action.payload.name) {
-                            return action.payload;
-                        }
-
-                        return post;
-                    }),
+                    ...state.posts,
+                    action.payload
                 ],
-            };
-        };
-
+                archivePosts: [
+                    ...state.archivePosts
+                ]
+            }
+        }
         default:
             return state;
     }
 }
 
-export const store = createStore(dispatcher);
+export const store = createStore(dispatcher)

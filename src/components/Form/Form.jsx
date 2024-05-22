@@ -1,61 +1,40 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback } from "react";
 
-import { useDispatch, useSelector } from 'react-redux';
-import { getField } from "../../getFields";
+import { useDispatch } from 'react-redux';
+
+import { addNote } from './addNote';
+import { Archive } from "../Archive";
 
 import './styles.css';
 
 export const Form = () => {
-    const disp = useDispatch();
-    const isEditMode = useSelector(state => state.isEditMode);
+    const disp = useDispatch()
 
-    useEffect(() => {
-        console.log(isEditMode)
-    }, [isEditMode])
-
-    const handleAdd = useCallback(() => {
-        const { _name, _theme, _text } = getField();
-    
-        disp({
-            type: "ACTION_ADD",
-            payload: {
-                name: _name.value,
-                theme: _theme.value,
-                text: _text.value,
-            },
-        });
-    }, [disp])
-
-    const handleEdit = useCallback(() => {
-        const { _name, _theme, _text } = getField();
-    
-        disp({
-            type: "ACTION_EDIT",
-            payload: {
-                name: _name.value,
-                theme: _theme.value,
-                text: _text.value,
-            },
-        });
-        disp({
-            type: "ACTION_LEAVE_EDIT_MODE"
-        });
-    }, [disp])
+    const addNoteHandler = useCallback(() => addNote(disp), [addNote, disp])
 
     return (
         <div className="form">
-            <label htmlFor="name">Введите название</label>
-            <input id="name" type="text" />
-            <label htmlFor="theme">Введите тему</label>
-            <input id="theme" type="text" />
-            <label htmlFor="text">Можете печатать:)</label>
-            <textarea id="text" cols="30" rows="10"></textarea>
-            <div 
-                onClick={ isEditMode ? handleEdit : handleAdd } 
-                className="button"
-            >
-                { isEditMode ? "Изменить" : "Добавить"}
+            <span className='textSpan'>
+                Добавить запись
+            </span>
+
+            <label htmlFor="author">Автор</label>
+            <input id="author" type="text" />
+
+            <label htmlFor="postHead">Заголовок</label>
+            <input id="postHead" type="text" />
+
+            <label htmlFor="category">Категория</label>
+            <input id="category" type="text" />
+
+            <label htmlFor="text">Текст</label>
+            <textarea id="text" cols="50" rows="10"></textarea>
+
+            <div className="button" onClick={addNoteHandler}>
+                Добавить
             </div>
+
+            <Archive />
         </div>
     );
 }
